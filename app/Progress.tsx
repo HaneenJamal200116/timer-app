@@ -8,6 +8,7 @@ export function Progress({ timeChoosed }: any) {
   const timeChoosedSec = timeChoosed * 60;
   const btnAudioRef = useRef<HTMLAudioElement | null>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
+  const doneRef = useRef<HTMLAudioElement | null>(null);
 
   const [currentTime, setCurrentTime] = useState(timeChoosedSec);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -15,11 +16,13 @@ export function Progress({ timeChoosed }: any) {
 
   useEffect(() => {
     btnAudioRef.current = new Audio("/btn.wav");
+    doneRef.current = new Audio("/done.mp3");
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       btnAudioRef.current = null;
       musicRef.current?.pause();
+      doneRef.current = null;
     };
   }, []);
   function startCountDown(seconds: number) {
@@ -31,6 +34,9 @@ export function Progress({ timeChoosed }: any) {
 
       if (counter <= 0) {
         if (intervalRef.current) clearInterval(intervalRef.current);
+        void doneRef.current?.play().catch(() => undefined);
+        musicRef.current?.pause();
+
         intervalRef.current = null;
         setCurrentTime(timeChoosed * 60);
         setIsPlay(false);

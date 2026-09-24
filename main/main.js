@@ -13,11 +13,9 @@ const createWindow = () => {
     width: 400,
     height: 500,
     minWidth: 400,
-    minHeight: 490, // The window cannot be resized smaller than 300px high
+    minHeight: 490,
+    maxWidth: 636,
 
-    // // Maximum boundary constraints
-    maxWidth: 636, // The window cannot be resized larger than 1200px wide
-    // maxHeight: 900,
     toolbar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
