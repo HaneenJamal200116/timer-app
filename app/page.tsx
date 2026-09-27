@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { Pixelify_Sans, Tienne } from "next/font/google";
+import { Pixelify_Sans, Tienne, Geist_Pixel } from "next/font/google";
 import { Progress } from "./Progress";
 import {
   Dialog,
@@ -19,7 +19,7 @@ const PixelFont = Pixelify_Sans({
 export default function Home() {
   const [active, setActive] = useState(0);
   const [sound, setSound] = useState(false);
-  const times = [60, 45, 30, 15];
+  const times = [60, 45, 30, 15, 10, 5, 1];
   return (
     <>
       <header className="app-drag w-full shrink-0">
@@ -31,7 +31,7 @@ export default function Home() {
       </header>
 
       <div
-        className={`${PixelFont.className} flex min-h-0 w-full flex-1 flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18`}
+        className={`${PixelFont.className} flex min-h-0 w-full flex-1 flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18 `}
       >
         <main className="relative flex min-h-0 w-3/4 max-w-3xl flex-1 flex-col items-center justify-center bg-white/30 backdrop-invert backdrop-opacity-10">
           <div

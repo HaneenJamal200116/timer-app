@@ -147,3 +147,12 @@
 .app-drag select {
   -webkit-app-region: no-drag;
 }
+@media screen and (min-width: 700px) {
+  body {
+    background-image: url("/bigbg.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+}

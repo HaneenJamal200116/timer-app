@@ -1,0 +1,3 @@
+win:
+  target: ["nsis", "zip"]
+  icon: "app/favicon.ico"
