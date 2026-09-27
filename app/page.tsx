@@ -22,7 +22,7 @@ export default function Home() {
   const times = [60, 45, 30, 15, 10, 5, 1];
   return (
     <>
-      <header className="app-drag w-full shrink-0">
+      <header className="app-drag w-full shrink-0 ">
         <h1
           className={`${PixelFont.className} mt-2 px-12 text-center text-3xl text-[#fbf3d1] sm:mt-6 sm:px-20 sm:text-6xl`}
         >
@@ -31,9 +31,9 @@ export default function Home() {
       </header>
 
       <div
-        className={`${PixelFont.className} flex min-h-0 w-full flex-1 flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18 `}
+        className={`${PixelFont.className} flex p-6  w-full  flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18 `}
       >
-        <main className="relative flex min-h-0 w-3/4 max-w-3xl flex-1 flex-col items-center justify-center bg-white/30 backdrop-invert backdrop-opacity-10">
+        <main className="relative flex min-h-0 w-3/4 p-6 p-6  max-w-3xl  flex-col items-center justify-center bg-white/30 backdrop-invert backdrop-opacity-10">
           <div
             className={`${PixelFont.className} absolute left-0 top-0 z-10 m-2 overflow-hidden sm:m-4`}
           >
