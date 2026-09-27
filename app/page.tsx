@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { Pixelify_Sans, Tienne, Geist_Pixel } from "next/font/google";
+import { Pixelify_Sans, Tienne } from "next/font/google";
 import { Progress } from "./Progress";
 import {
   Dialog,
@@ -10,7 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+import { useState, type ChangeEvent } from "react";
 const PixelFont = Pixelify_Sans({
   subsets: ["latin"],
   weight: "400",
@@ -18,11 +21,26 @@ const PixelFont = Pixelify_Sans({
 
 export default function Home() {
   const [active, setActive] = useState(0);
+  const [input, setInput] = useState("");
   const [sound, setSound] = useState(false);
-  const times = [60, 45, 30, 15, 10, 5, 1];
+  const [times, setTimes] = useState<number[]>([60, 45, 30, 15]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
+
+  const addCustomTime = () => {
+    const customMinutes = Number(input);
+    if (!Number.isInteger(customMinutes) || customMinutes < 1) return;
+
+    const nextTimes = [...times, customMinutes];
+    setTimes(nextTimes);
+    setActive(nextTimes.length - 1);
+    setInput("");
+  };
   return (
     <>
-      <header className="app-drag w-full shrink-0 ">
+      <header className="app-drag w-full shrink-0">
         <h1
           className={`${PixelFont.className} mt-2 px-12 text-center text-3xl text-[#fbf3d1] sm:mt-6 sm:px-20 sm:text-6xl`}
         >
@@ -31,9 +49,9 @@ export default function Home() {
       </header>
 
       <div
-        className={`${PixelFont.className} flex p-6  w-full  flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18 `}
+        className={`${PixelFont.className} flex min-h-0 w-full flex-1 flex-col items-center justify-center bg-transparent px-2 pb-6 pt-2 sm:px-8 sm:pb-12 sm:pt-5 md:px-18`}
       >
-        <main className="relative flex min-h-0 w-3/4 p-6 p-6  max-w-3xl  flex-col items-center justify-center bg-white/30 backdrop-invert backdrop-opacity-10">
+        <main className="phone-compact-panel relative flex min-h-0 w-3/4 max-w-3xl flex-1 flex-col items-center justify-center bg-white/30 backdrop-invert backdrop-opacity-10">
           <div
             className={`${PixelFont.className} absolute left-0 top-0 z-10 m-2 overflow-hidden sm:m-4`}
           >
@@ -93,6 +111,28 @@ export default function Home() {
                         {ele} min
                       </button>
                     ))}
+                    <span className="m-auto  mt-3">
+                      <Input
+                        className="m-auto w-fit text-center border "
+                        onClick={() => {}}
+                        id="input-field-time"
+                        placeholder="Custom Time"
+                        type="text"
+                        value={input}
+                        onChange={handleChange}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={addCustomTime}
+                        className="relative border-none inline-block cursor-pointer text-white "
+                      >
+                        <span className="absolute inset-0 rounded-xl bg-[#9d5021] translate-y-[5px]"></span>
+                        <span className="bg-[#D67941] relative inline-flex items-center justify-center p-2.5 sm:p-3 rounded-xl bg-primary-500 border border-[#c36d3a] transition-transform duration-75 active:translate-y-[5px] ">
+                          Enter
+                        </span>
+                      </button>
+                    </span>
                   </DialogDescription>
                 </DialogHeader>
               </DialogContent>
@@ -105,7 +145,7 @@ export default function Home() {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                 <path
                   fill="rgb(0, 0, 0)"
-                  d="M80 416L128 416L262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416zM399 239C389.6 248.4 389.6 263.6 399 272.9L446 319.9L399 366.9C389.6 376.3 389.6 391.5 399 400.8C408.4 410.1 423.6 410.2 432.9 400.8L479.9 353.8L526.9 400.8C536.3 410.2 551.5 410.2 560.8 400.8C570.1 391.4 570.2 376.2 560.8 366.9L513.8 319.9L560.8 272.9C570.2 263.5 570.2 248.3 560.8 239C551.4 229.7 536.2 229.6 526.9 239L479.9 286L432.9 239C423.5 229.6 408.3 229.6 399 239z"
+                  d="M80 416L128 416L 262.1 535.2C268.5 540.9 276.7 544 285.2 544C304.4 544 320 528.4 320 509.2L320 130.8C320 111.6 304.4 96 285.2 96C276.7 96 268.5 99.1 262.1 104.8L128 224L80 224C53.5 224 32 245.5 32 272L32 368C32 394.5 53.5 416 80 416zM399 239C389.6 248.4 389.6 263.6 399 272.9L446 319.9L399 366.9C389.6 376.3 389.6 391.5 399 400.8C408.4 410.1 423.6 410.2 432.9 400.8L479.9 353.8L526.9 400.8C536.3 410.2 551.5 410.2 560.8 400.8C570.1 391.4 570.2 376.2 560.8 366.9L513.8 319.9L560.8 272.9C570.2 263.5 570.2 248.3 560.8 239C551.4 229.7 536.2 229.6 526.9 239L479.9 286L432.9 239C423.5 229.6 408.3 229.6 399 239z"
                 />
               </svg>
             ) : (

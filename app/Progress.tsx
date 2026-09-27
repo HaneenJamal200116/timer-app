@@ -75,7 +75,7 @@ export function Progress({ timeChoosed }: any) {
       <audio ref={musicRef} src="/onmyway.mp3" preload="auto" loop />
       <div className="relative ">
         <ProgressCircle
-          className="size-full lg:w-lg "
+          className="size-full  lg:w-lg "
           value={progress}
           isMoving={iSplay}
         />

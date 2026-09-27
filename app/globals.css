@@ -147,6 +147,15 @@
 .app-drag select {
   -webkit-app-region: no-drag;
 }
+
+@media (max-width: 639px) and (pointer: coarse) {
+  .phone-compact-panel {
+    flex: none;
+  }
+  header h1 {
+  }
+}
+
 @media screen and (min-width: 700px) {
   body {
     background-image: url("/bigbg.jpg");
