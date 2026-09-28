@@ -3,63 +3,76 @@
 import { useEffect, useRef, useState } from "react";
 import { ProgressCircle } from "@/components/ui/progress-circle";
 
-export function Progress({ timeChoosed }: any) {
-  const [iSplay, setIsPlay] = useState(false);
-  const timeChoosedSec = timeChoosed * 60;
+type ProgressProps = {
+  timeChoosed: number;
+};
+export function Progress({ timeChoosed }: ProgressProps) {
   const btnAudioRef = useRef<HTMLAudioElement | null>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
   const doneRef = useRef<HTMLAudioElement | null>(null);
-
-  const [currentTime, setCurrentTime] = useState(timeChoosedSec);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [sound, setSound] = useState(false);
 
+  const [countdownStarted, setCountdownStarted] = useState(false);
+  const timeChoosedSec = timeChoosed * 60;
+  const [timeRemaining, setTimeRemaining] = useState(timeChoosedSec);
+  const goalTime = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!countdownStarted) return;
+
+    const updateRemainingTime = () => {
+      if (goalTime.current === null) return;
+      const remainingSeconds = Math.max(
+        0,
+        Math.ceil((goalTime.current - Date.now()) / 1000),
+      );
+      setTimeRemaining(remainingSeconds);
+
+      if (remainingSeconds <= 0) {
+        void doneRef.current?.play().catch(() => undefined);
+        setTimeRemaining(timeChoosedSec);
+        goalTime.current = null;
+        setCountdownStarted(false);
+      }
+    };
+
+    updateRemainingTime();
+    const countdownInterval = setInterval(updateRemainingTime, 1000);
+
+    return () => clearInterval(countdownInterval);
+  }, [countdownStarted]);
   useEffect(() => {
     btnAudioRef.current = new Audio("/btn.wav");
     doneRef.current = new Audio("/done.mp3");
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
       btnAudioRef.current = null;
       musicRef.current?.pause();
       doneRef.current = null;
     };
   }, []);
-  function startCountDown(seconds: number) {
-    let counter = seconds;
-
-    intervalRef.current = setInterval(() => {
-      counter--;
-      setCurrentTime(counter);
-
-      if (counter <= 0) {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        void doneRef.current?.play().catch(() => undefined);
-        musicRef.current?.pause();
-
-        intervalRef.current = null;
-        setCurrentTime(timeChoosed * 60);
-        setIsPlay(false);
-        return;
-      }
-    }, 1000);
-  }
-
   const handlePlay = () => {
-    if (!iSplay) startCountDown(currentTime);
-    else {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    if (countdownStarted) {
+      if (goalTime.current != null) {
+        setTimeRemaining(
+          Math.max(0, Math.ceil((goalTime.current - Date.now()) / 1000)),
+        );
+      }
+      goalTime.current = null;
+      setCountdownStarted(false);
+    } else {
+      let secondsToRun = timeRemaining;
+      goalTime.current = Date.now() + secondsToRun * 1000;
+      setCountdownStarted(true);
     }
-    setIsPlay(!iSplay);
     void btnAudioRef.current?.play().catch(() => undefined);
   };
 
   const handleReset = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = null;
-    setCurrentTime(timeChoosed * 60);
-    setIsPlay(false);
+    goalTime.current = null;
+    setCountdownStarted(false);
+
+    setTimeRemaining(timeChoosedSec);
     void btnAudioRef.current?.play().catch(() => undefined);
   };
 
@@ -68,7 +81,7 @@ export function Progress({ timeChoosed }: any) {
     let sec = seconds % 60;
     return `${min}:${String(sec).padStart(2, "0")}`;
   }
-  const progress = ((timeChoosedSec - currentTime) / timeChoosedSec) * 100;
+  const progress = ((timeChoosedSec - timeRemaining) / timeChoosedSec) * 100;
 
   return (
     <div className="m-auto flex text-[#fbf3d1] min-w-56 flex-col items-center justify-center gap-y-6">
@@ -77,10 +90,10 @@ export function Progress({ timeChoosed }: any) {
         <ProgressCircle
           className="size-full  lg:w-lg "
           value={progress}
-          isMoving={iSplay}
+          isMoving={countdownStarted}
         />
         <h1 className=" text-black absolute inset-0 flex items-center justify-center text-5xl lg:text-7xl tracking-widest">
-          {format(currentTime)}
+          {format(timeRemaining)}
         </h1>
       </div>
       <div className="buttons flex text-lg  lg:text-3xl gap-10 flex-row tracking-widest">
@@ -90,7 +103,7 @@ export function Progress({ timeChoosed }: any) {
         >
           <span className="absolute inset-0 rounded-xl bg-[#9d5021] translate-y-[5px]"></span>
           <span className="bg-[#D67941] relative inline-flex items-center justify-center p-2.5 sm:p-3 rounded-xl bg-primary-500 border border-[#c36d3a] transition-transform duration-75 active:translate-y-[5px] ">
-            {iSplay ? <>Pause</> : <>Play</>}
+            {countdownStarted ? <>Pause</> : <>Start</>}
           </span>
         </button>
         <button

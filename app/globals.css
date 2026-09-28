@@ -152,8 +152,6 @@
   .phone-compact-panel {
     flex: none;
   }
-  header h1 {
-  }
 }
 
 @media screen and (min-width: 700px) {
